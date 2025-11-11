@@ -11,35 +11,35 @@ pipeline:
   stages:
     - stage: 'Install Dependencies'
       steps:
-        - sh: 'echo "Installing Node modules..."'
-        - sh: 'npm install'
+        - echo: "Installing Node modules..."
+        - sh: "npm install"
 
     - stage: 'Run Tests'
       steps:
-        - sh: 'echo "Running tests..."'
-        - sh: 'npm test'
+        - echo: "Running tests..."
+        - sh: "npm test"
 
     - stage: 'Build/Package'
       steps:
-        - sh: 'echo "Running lint and build step..."'
-        - sh: 'npm run lint'
-        - sh: 'npm run build'
-        - sh: 'tar -czvf my-app-${VERSION}.tar.gz dist/'
+        - echo: "Running lint and build step..."
+        - sh: "npm run lint"
+        - sh: "npm run build"
+        - sh: "tar -czvf my-app-${VERSION}.tar.gz dist/"
 
     - stage: 'Deploy to Staging'
       steps:
-        - sh: 'echo "Deploying version ${VERSION} to staging..."'
-        - sh: './deploy.sh staging'
+        - echo: "Deploying version ${VERSION} to staging..."
+        - sh: "./deploy.sh staging"
 
     - stage: 'Deploy to Production'
       steps:
-        - sh: 'echo "Deploying to production (manual approval skipped)..."'
-        - sh: './deploy.sh production'
+        - echo: "Deploying to production..."
+        - sh: "./deploy.sh production"
 
   post:
     always:
-      - sh: 'echo "Pipeline finished. Check status."'
+      - echo: "Pipeline finished. Check status."
     success:
-      - sh: 'echo "Deployment Successful!"'
+      - echo: "Deployment Successful!"
     failure:
-      - sh: 'echo "Pipeline FAILED! Check console output for errors."'
+      - echo: "Pipeline FAILED! Check console output for errors."
