@@ -17,9 +17,9 @@ pipeline:
     # 1. Checkout (usually handled implicitly by SCM configuration) and Setup
     - stage: 'Install Dependencies'
       steps:
-        # Use sh to execute shell commands inside the node:20-slim container
-        - sh: 'echo "Installing Node modules..."'
-        - sh: 'npm install' # Assumes package.json is present
+        # FIX: Changed '- sh: '...'' to just '- '...'
+        - 'echo "Installing Node modules..."'
+        - 'npm install' # Assumes package.json is present
 
     # 2. Testing
     - stage: 'Run Tests'
@@ -27,24 +27,38 @@ pipeline:
       when:
         - branch: 'main'
       steps:
-        - sh: 'echo "Running tests..."'
-        - sh: 'npm test' # Assumes a 'test' script in package.json
+        - 'echo "Running tests..."'
+        - 'npm test' # Assumes a 'test' script in package.json
 
     # 3. Build/Package (if necessary)
-    - stage: 'Build/Lint'
+    - stage: 'Build/Package'
       steps:
-        - sh: 'echo "Running lint and build step..."'
-        - sh: 'npm run lint'
-        - sh: 'npm run build' # Assumes a 'build' script in package.json
-        - sh: 'tar -czvf my-app-${VERSION}.tar.gz dist/' # Package artifacts
+        - 'echo "Running lint and build step..."'
+        - 'npm run lint'
+        - 'npm run build' # Assumes a 'build' script in package.json
+        - 'tar -czvf my-app-${VERSION}.tar.gz dist/' # Package artifacts
 
-    # 4. Deployment
+    # 4. Deployment to Staging
     - stage: 'Deploy to Staging'
-      # Deploy step only runs if previous stages succeeded
       steps:
-        - sh: 'echo "Deploying version ${VERSION} to staging..."'
-        # Call a script to handle the actual deployment logic (e.g., ECS, SSH, Kubernetes)
-        - sh: './deploy.sh staging' 
+        - 'echo "Deploying version ${VERSION} to staging..."'
+        # Call the script with the 'staging' argument
+        - './deploy.sh staging' 
+
+    # 5. Deployment to Production (Requires Manual Approval)
+    - stage: 'Deploy to Production'
+      when:
+        - branch: 'main' # Only deploy main branch to production
+      steps:
+        # NOTE: The 'input' step must remain as an object map, as it is a specialized Groovy step.
+        - input:
+            id: 'ConfirmDeployment'
+            message: 'Proceed to deploy version ${VERSION} to PRODUCTION?'
+            ok: 'Deploy Now'
+        
+        - 'echo "Manual approval granted. Deploying to Production..."'
+        # Call the script with the 'production' argument
+        - './deploy.sh production'
 
   # Post-execution actions
   post:
