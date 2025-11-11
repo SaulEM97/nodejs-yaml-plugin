@@ -22,7 +22,7 @@ pipeline:
 
     # 2. Testing
     - stage: 'Run Tests'
-      # FIX: Changed 'when: - branch: "main"' to 'when: branch: "main"'
+      # Corrected 'when' syntax
       when:
         branch: 'main'
       steps:
@@ -46,11 +46,11 @@ pipeline:
 
     # 5. Deployment to Production (Requires Manual Approval)
     - stage: 'Deploy to Production'
-      # FIX: Changed 'when: - branch: "main"' to 'when: branch: "main"'
+      # Corrected 'when' syntax
       when:
         branch: 'main'
       steps:
-        # The 'input' step must remain as an object map
+        # The 'input' step is a special declarative step and must remain a map
         - input:
             id: 'ConfirmDeployment'
             message: 'Proceed to deploy version ${VERSION} to PRODUCTION?'
@@ -62,9 +62,10 @@ pipeline:
 
   # Post-execution actions
   post:
+    # FIX: Changed 'echo: "..."' to simple shell strings 'echo "..."'
     always:
-      - echo: 'Pipeline finished. Check status.'
+      - 'echo "Pipeline finished. Check status."'
     success:
-      - echo: 'Deployment Successful!'
+      - 'echo "Deployment Successful!"'
     failure:
-      - echo: 'Pipeline FAILED! Check console output for errors.'
+      - 'echo "Pipeline FAILED! Check console output for errors."'
