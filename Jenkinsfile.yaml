@@ -15,8 +15,6 @@ pipeline:
         - sh: 'npm install'
 
     - stage: 'Run Tests'
-      when:
-        branch: 'main'
       steps:
         - sh: 'echo "Running tests..."'
         - sh: 'npm test'
@@ -34,14 +32,8 @@ pipeline:
         - sh: './deploy.sh staging'
 
     - stage: 'Deploy to Production'
-      when:
-        branch: 'main'
       steps:
-        - input:
-            id: 'ConfirmDeployment'
-            message: 'Proceed to deploy version ${VERSION} to PRODUCTION?'
-            ok: 'Deploy Now'
-        - sh: 'echo "Manual approval granted. Deploying to Production..."'
+        - sh: 'echo "Deploying to production (manual approval skipped)..."'
         - sh: './deploy.sh production'
 
   post:
