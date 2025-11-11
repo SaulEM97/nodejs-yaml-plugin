@@ -17,15 +17,14 @@ pipeline:
     # 1. Checkout (usually handled implicitly by SCM configuration) and Setup
     - stage: 'Install Dependencies'
       steps:
-        # FIX: Changed '- sh: '...'' to just '- '...'
         - 'echo "Installing Node modules..."'
         - 'npm install' # Assumes package.json is present
 
     # 2. Testing
     - stage: 'Run Tests'
-      # The 'when' directive ensures this stage only runs on the main branch
+      # FIX: Changed 'when: - branch: "main"' to 'when: branch: "main"'
       when:
-        - branch: 'main'
+        branch: 'main'
       steps:
         - 'echo "Running tests..."'
         - 'npm test' # Assumes a 'test' script in package.json
@@ -47,10 +46,11 @@ pipeline:
 
     # 5. Deployment to Production (Requires Manual Approval)
     - stage: 'Deploy to Production'
+      # FIX: Changed 'when: - branch: "main"' to 'when: branch: "main"'
       when:
-        - branch: 'main' # Only deploy main branch to production
+        branch: 'main'
       steps:
-        # NOTE: The 'input' step must remain as an object map, as it is a specialized Groovy step.
+        # The 'input' step must remain as an object map
         - input:
             id: 'ConfirmDeployment'
             message: 'Proceed to deploy version ${VERSION} to PRODUCTION?'
