@@ -1,0 +1,56 @@
+pipeline:
+  # The agent section defines where the pipeline runs. 
+  # Using a standard Node.js Docker image is a modern best practice.
+  agent:
+    docker:
+      image: 'node:20-slim'
+      args: '-u root' # Use -u root if running into permission issues with npm install
+
+  # Environment variables for the entire pipeline
+  environment:
+    NODE_ENV: production
+    VERSION: '1.0.0'
+
+  # The main flow of the CI/CD process
+  stages:
+
+    # 1. Checkout (usually handled implicitly by SCM configuration) and Setup
+    - stage: 'Install Dependencies'
+      steps:
+        # Use sh to execute shell commands inside the node:20-slim container
+        - sh: 'echo "Installing Node modules..."'
+        - sh: 'npm install' # Assumes package.json is present
+
+    # 2. Testing
+    - stage: 'Run Tests'
+      # The 'when' directive ensures this stage only runs on the main branch
+      when:
+        - branch: 'main'
+      steps:
+        - sh: 'echo "Running tests..."'
+        - sh: 'npm test' # Assumes a 'test' script in package.json
+
+    # 3. Build/Package (if necessary)
+    - stage: 'Build/Lint'
+      steps:
+        - sh: 'echo "Running lint and build step..."'
+        - sh: 'npm run lint'
+        - sh: 'npm run build' # Assumes a 'build' script in package.json
+        - sh: 'tar -czvf my-app-${VERSION}.tar.gz dist/' # Package artifacts
+
+    # 4. Deployment
+    - stage: 'Deploy to Staging'
+      # Deploy step only runs if previous stages succeeded
+      steps:
+        - sh: 'echo "Deploying version ${VERSION} to staging..."'
+        # Call a script to handle the actual deployment logic (e.g., ECS, SSH, Kubernetes)
+        - sh: './deploy.sh staging' 
+
+  # Post-execution actions
+  post:
+    always:
+      - echo: 'Pipeline finished. Check status.'
+    success:
+      - echo: 'Deployment Successful!'
+    failure:
+      - echo: 'Pipeline FAILED! Check console output for errors.'
