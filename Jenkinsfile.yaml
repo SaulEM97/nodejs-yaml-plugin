@@ -1,71 +1,53 @@
 pipeline:
-  # The agent section defines where the pipeline runs. 
-  # Using a standard Node.js Docker image is a modern best practice.
   agent:
     docker:
       image: 'node:20-slim'
-      args: '-u root' # Use -u root if running into permission issues with npm install
+      args: '-u root'
 
-  # Environment variables for the entire pipeline
   environment:
     NODE_ENV: production
     VERSION: '1.0.0'
 
-  # The main flow of the CI/CD process
   stages:
-
-    # 1. Checkout (usually handled implicitly by SCM configuration) and Setup
     - stage: 'Install Dependencies'
       steps:
-        - 'echo "Installing Node modules..."'
-        - 'npm install' # Assumes package.json is present
+        - sh: 'echo "Installing Node modules..."'
+        - sh: 'npm install'
 
-    # 2. Testing
     - stage: 'Run Tests'
-      # Corrected 'when' syntax
       when:
         branch: 'main'
       steps:
-        - 'echo "Running tests..."'
-        - 'npm test' # Assumes a 'test' script in package.json
+        - sh: 'echo "Running tests..."'
+        - sh: 'npm test'
 
-    # 3. Build/Package (if necessary)
     - stage: 'Build/Package'
       steps:
-        - 'echo "Running lint and build step..."'
-        - 'npm run lint'
-        - 'npm run build' # Assumes a 'build' script in package.json
-        - 'tar -czvf my-app-${VERSION}.tar.gz dist/' # Package artifacts
+        - sh: 'echo "Running lint and build step..."'
+        - sh: 'npm run lint'
+        - sh: 'npm run build'
+        - sh: 'tar -czvf my-app-${VERSION}.tar.gz dist/'
 
-    # 4. Deployment to Staging
     - stage: 'Deploy to Staging'
       steps:
-        - 'echo "Deploying version ${VERSION} to staging..."'
-        # Call the script with the 'staging' argument
-        - './deploy.sh staging' 
+        - sh: 'echo "Deploying version ${VERSION} to staging..."'
+        - sh: './deploy.sh staging'
 
-    # 5. Deployment to Production (Requires Manual Approval)
     - stage: 'Deploy to Production'
-      # Corrected 'when' syntax
       when:
         branch: 'main'
       steps:
-        # The 'input' step is a special declarative step and must remain a map
         - input:
             id: 'ConfirmDeployment'
             message: 'Proceed to deploy version ${VERSION} to PRODUCTION?'
             ok: 'Deploy Now'
-        
-        - 'echo "Manual approval granted. Deploying to Production..."'
-        # Call the script with the 'production' argument
-        - './deploy.sh production'
+        - sh: 'echo "Manual approval granted. Deploying to Production..."'
+        - sh: './deploy.sh production'
 
-  # Post-execution actions
   post:
-    # FIX: Changed 'echo: "..."' to simple shell strings 'echo "..."'
     always:
-      - 'echo "Pipeline finished. Check status."'
+      - sh: 'echo "Pipeline finished. Check status."'
     success:
-      - 'echo "Deployment Successful!"'
+      - sh: 'echo "Deployment Successful!"'
     failure:
-      - 'echo "Pipeline FAILED! Check console output for errors."'
+      - sh: 'echo "Pipeline FAILED! Check console output for errors."'
