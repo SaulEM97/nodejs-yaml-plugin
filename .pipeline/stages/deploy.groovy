@@ -1,8 +1,9 @@
-void call() {
+def deployStage() {
     sh """
         echo "Deploying Node.js app..."
         pkill -f "node index.js" || true
         nohup node index.js > app.log 2>&1 &
     """
 }
+return this
 

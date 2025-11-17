@@ -1,4 +1,5 @@
-void call() {
+def testStage() {
     sh "npm test"
 }
+return this
 

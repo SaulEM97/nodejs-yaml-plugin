@@ -1,4 +1,5 @@
-void call() {
+def buildStage() {
     sh "npm install"
 }
+return this
 

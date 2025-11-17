@@ -1,6 +1,12 @@
 node {
-    build()
-    test()
-    deploy()
+    stage('Build') {
+        buildStage()
+    }
+    stage('Test') {
+        testStage()
+    }
+    stage('Deploy') {
+        deployStage()
+    }
 }
 
