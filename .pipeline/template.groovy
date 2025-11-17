@@ -1,5 +1,3 @@
-node {
-    build()
-    test()
-    deploy()
-}
+build()
+test()
+deploy()

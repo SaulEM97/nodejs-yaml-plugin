@@ -1,8 +1,8 @@
 pipeline_config {
     agent = "any"
     stages {
-        build
-        test
-        deploy
+        build = true
+        test = true
+        deploy = true
     }
 }
