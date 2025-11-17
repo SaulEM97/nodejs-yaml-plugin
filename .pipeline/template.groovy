@@ -1,14 +1,20 @@
 node {
     stage('Checkout') {
-        checkout scm  // JTE usually handles this automatically
+        // Remove workspace if needed
+        deleteDir()  // Optional, ensures clean workspace
+
+        // Clone the repo
+        sh 'git clone https://github.com/SaulEM97/nodejs-yaml-plugin.git .'
     }
 
-    def buildStage = load "${env.WORKSPACE}/.pipeline/stages/build.groovy"
-    def testStage = load "${env.WORKSPACE}/.pipeline/stages/test.groovy"
-    def deployStage = load "${env.WORKSPACE}/.pipeline/stages/deploy.groovy"
+    stage('Load stages') {
+        def buildStage = load ".pipeline/stages/build.groovy"
+        def testStage = load ".pipeline/stages/test.groovy"
+        def deployStage = load ".pipeline/stages/deploy.groovy"
 
-    stage('Build') { buildStage.buildStage() }
-    stage('Test') { testStage.testStage() }
-    stage('Deploy') { deployStage.deployStage() }
+        stage('Build') { buildStage.buildStage() }
+        stage('Test') { testStage.testStage() }
+        stage('Deploy') { deployStage.deployStage() }
+    }
 }
 
