@@ -1,11 +1,21 @@
-stage('build') {
-    build.run()
-}
+pipeline {
+    stages {
+        stage('build') {
+            steps {
+                build.run()
+            }
+        }
 
-stage('test') {
-    test.run()
-}
+        stage('test') {
+            steps {
+                test.run()
+            }
+        }
 
-stage('deploy') {
-    deploy.run()
+        stage('deploy') {
+            steps {
+                deploy.run()
+            }
+        }
+    }
 }
