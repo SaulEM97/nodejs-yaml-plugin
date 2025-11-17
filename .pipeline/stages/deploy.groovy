@@ -1,12 +1,8 @@
-def deploy() {
+void call() {
     sh """
-        echo "Installing production dependencies..."
-        npm install --production
-
-        echo "Stopping existing Node process..."
+        echo "Deploying Node.js app..."
         pkill -f "node index.js" || true
-
-        echo "Starting Node.js app..."
         nohup node index.js > app.log 2>&1 &
     """
 }
+

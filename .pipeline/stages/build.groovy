@@ -1,3 +1,4 @@
-def build() {
-    sh 'npm install'
+void call() {
+    sh "npm install"
 }
+

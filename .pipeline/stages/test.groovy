@@ -1,3 +1,4 @@
-def test() {
-    sh 'npm test'
+void call() {
+    sh "npm test"
 }
+

@@ -1,5 +1,5 @@
 node {
-    build.run()
-    test.run()
-    deploy.run()
+    build()
+    test()
+    deploy()
 }
