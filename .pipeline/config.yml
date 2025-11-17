@@ -1,5 +1,6 @@
-pipeline_config:
-  agent: any
+pipeline:
+  agent:
+    label: any
   stages:
     - build
     - test
