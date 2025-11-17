@@ -1,8 +1,8 @@
-stage('Deploy') {
-  steps {
+void run() {
     echo 'Deploying Node.js app...'
-    // example: sh 'scp -r . user@server:/var/www/nodeapp'
-    // or a Docker build/push
-  }
+    sh '''
+        scp -r . user@server:/var/www/nodeapp
+        ssh user@server "pm2 restart nodeapp"
+    '''
 }
 

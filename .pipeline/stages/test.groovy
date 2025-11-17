@@ -1,6 +1,4 @@
-stage('Test') {
-  steps {
+void run() {
     sh 'npm test || echo "Tests failed"'
-  }
 }
 

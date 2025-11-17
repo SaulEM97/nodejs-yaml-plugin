@@ -1,6 +1,4 @@
-stage('Build') {
-  steps {
+void run() {
     sh 'npm install'
-  }
 }
 
