@@ -1,6 +1,6 @@
 pipeline_config:
-  agent: any
+  agent: 'any'
   stages:
-    - build
-    - test
-    - deploy
+    build: {}
+    test: {}
+    deploy: {}
