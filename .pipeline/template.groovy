@@ -1,3 +1,3 @@
-build()
-test()
-deploy()
+build.call()
+test.call()
+deploy.call()
