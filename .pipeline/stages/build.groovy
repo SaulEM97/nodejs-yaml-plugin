@@ -1,4 +1,3 @@
-void run() {
+def build() {
     sh 'npm install'
 }
-

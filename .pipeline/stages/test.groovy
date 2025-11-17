@@ -1,4 +1,3 @@
-void run() {
-    sh 'npm test || echo "Tests failed"'
+def test() {
+    sh 'npm test'
 }
-

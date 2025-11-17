@@ -1,8 +1,12 @@
-void run() {
-    echo 'Deploying Node.js app...'
-    sh '''
-        scp -r . user@server:/var/www/nodeapp
-        ssh user@server "pm2 restart nodeapp"
-    '''
-}
+def deploy() {
+    sh """
+        echo "Installing production dependencies..."
+        npm install --production
 
+        echo "Stopping existing Node process..."
+        pkill -f "node index.js" || true
+
+        echo "Starting Node.js app..."
+        nohup node index.js > app.log 2>&1 &
+    """
+}
