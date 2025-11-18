@@ -1,5 +1,8 @@
 def buildStage() {
-    sh "npm install"
+    sh """
+        rm -rf node_modules
+        npm install
+    """
 }
 return this
 

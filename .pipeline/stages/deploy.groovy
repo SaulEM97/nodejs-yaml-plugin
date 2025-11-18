@@ -1,19 +1,16 @@
 def deployStage() {
     sh """
-        echo "Deploying Node.js app with PM2..."
+        echo "Deploying Node.js app with PM2 (local install)..."
 
-        # Install PM2 if not installed
-        if ! command -v pm2 >/dev/null 2>&1; then
-            npm install -g pm2
-        fi
+        # Install PM2 locally in the workspace
+        npm install pm2 --save-dev
 
-        # Start or restart the app using PM2
-        pm2 start index.js --name node-app || pm2 restart node-app
+        # Start or restart using PM2 through npx
+        npx pm2 start index.js --name node-app || npx pm2 restart node-app
 
-        # Save PM2 process list so it restarts on reboot
-        pm2 save
+        # Save PM2 process list
+        npx pm2 save
     """
 }
-
 return this
 
