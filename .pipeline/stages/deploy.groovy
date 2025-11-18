@@ -5,10 +5,11 @@ def deployStage() {
             pm2 start index.js --name app
         """
 
-        // Confirmación
         sh "pm2 list"
         sh "sleep 2"
         sh "curl -v http://localhost:3000 || true"
     }
 }
+
+return this
 
