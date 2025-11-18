@@ -5,9 +5,14 @@ node {
     }
 
     stage('Load stages') {
-        buildStage  = load ".pipeline/stages/build.groovy"
-        testStage   = load ".pipeline/stages/test.groovy"
-        deployStage = load ".pipeline/stages/deploy.groovy"
+        def buildStage  = load ".pipeline/stages/build.groovy"
+        def testStage   = load ".pipeline/stages/test.groovy"
+        def deployStage = load ".pipeline/stages/deploy.groovy"
+
+        // expose them to later stages
+        this.buildStage  = buildStage
+        this.testStage   = testStage
+        this.deployStage = deployStage
     }
 
     stage('Build') {
