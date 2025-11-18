@@ -14,7 +14,7 @@ if (require.main === module) {
     res.end(getResponseText());
   });
 
-  server.listen(PORT, () => {
+  server.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
   });
 }
