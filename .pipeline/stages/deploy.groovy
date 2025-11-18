@@ -1,25 +1,14 @@
 def deployStage() {
-    sh """
-        echo "Deploying Node.js app with PM2..."
+    stage('Deploy') {
+        sh """
+            pm2 delete all || true
+            pm2 start index.js --name app
+        """
 
-        # Install PM2 locally
-        npm install pm2 --save-dev
-
-        # Start or restart the app
-        npx pm2 start index.js --name node-app || npx pm2 restart node-app
-
-        # Save PM2 process list
-        npx pm2 save
-
-        # Detect server IP
-        SERVER_IP=\$(hostname -I | awk '{print \$1}')
-
-        echo "============================================"
-        echo " Node.js app deployed successfully"
-        echo " URL: http://\$SERVER_IP:3000"
-        echo "============================================"
-    """
+        // Confirmación
+        sh "pm2 list"
+        sh "sleep 2"
+        sh "curl -v http://localhost:3000 || true"
+    }
 }
-
-return this
 
